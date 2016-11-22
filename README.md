@@ -1,1 +1,1 @@
-Experimental chat program using express;
+Experimental chat program using express and angular.
