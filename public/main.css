@@ -1,0 +1,7 @@
+textarea.message-entry {
+    resize: none;
+}
+
+.messages-window, .users-window {
+    height: 600px;
+} 

@@ -13,7 +13,7 @@
             restrict: 'E',
             templateUrl: '/partials/chat/chatwindow.html',
             controller: function($scope){
-                $scope.test = "Chat window goes here";
+                $scope.test = "Chat messages goes here";
             }
         }
     }]);
