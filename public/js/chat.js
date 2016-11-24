@@ -18,4 +18,21 @@
         }
     }]);
 
+    chat.directive('messageEntry', [function(){
+        return {
+            restrict: 'E',
+            templateUrl: '/partials/chat/messageEntry.html',
+            controller: function($scope){
+                $scope.message = {};
+                $scope.sendMessage =  function(message) {
+                    if(message.body && message.body.length >= 1){
+                        socket.emit('message', message);
+                        console.log("Sent: " + message.body);
+                        $scope.message = {};
+                    }
+                };
+            }
+        }
+    }]);
+
 })(); 

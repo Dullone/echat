@@ -18,4 +18,8 @@ io.on('connection', function(client){
     });
 });
 
+io.on('message', function(message){
+    console.log(message.body);
+});
+
 server.listen(3000);

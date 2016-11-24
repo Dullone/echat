@@ -1,0 +1,8 @@
+<form name="messageForm" ng-submit="sendMessage(message)">
+    <div class="form-group">
+        <textarea rows="2" cols="60" name="message-entry" class="message-entry form-control"
+                ng-model="message.body"
+        ></textarea>
+    </div>
+    <input type="submit" value="chat" class="btn btn-primary">
+</form>
