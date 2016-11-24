@@ -12,14 +12,35 @@ app.get('/', function(request, response) {
 
 io.on('connection', function(client){
     console.log("Client connected...");
-    client.emit('message', { hello: 'world' });
-    client.on('message', function(data){
-        console.log(data);
+    username =  randomUserName();
+    var userdata = {
+        username: username
+    }
+    console.log(userdata);
+    client.broadcast.emit('userjoined', userdata);
+
+    client.on('username', function(message){
+        username = message.username;
+    });
+
+    client.on('message', function(message){
+        message.username = username;
+
+        client.broadcast.emit('message', message);
+        client.emit('message', message);
+        console.log(message);
+    });
+
+    client.on('disconnect', function(){
+        console.log("disconnect");
+        console.log(userdata);
+        client.broadcast.emit('userdisconnected', userdata);
     });
 });
 
-io.on('message', function(message){
-    console.log(message.body);
-});
+
+var randomUserName = function(){
+    return "user" + Math.floor(Math.random() * 10000000);
+};
 
 server.listen(3000);

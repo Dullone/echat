@@ -1,19 +1,47 @@
 (function() {
+    
+    var chat = angular.module('chat', []);
     var socket = io.connect('http://localhost:3000');
 
-    socket.on('message', function(data){
-        console.log(data.hello);
-    });
-
-    var chat = angular.module('chat', []);
-    
-    
-    chat.directive('chatWindow', [function(){
+    chat.directive('chatWindow', ['$filter', function($filter){
+        socket.on('message', function(message){
+            console.log("Recieved" + message.body);
+            date = new Date();
+            time = $filter('date')(date, 'mediumTime');
+            dateString = '[' + time  + "] ";
+           $('.messages-window').append('<p>'+ 
+                        dateString + 
+                        message.username  + ": " + 
+                        message.body + '</p>');
+        });
         return{
             restrict: 'E',
             templateUrl: '/partials/chat/chatwindow.html',
             controller: function($scope){
-                $scope.test = "Chat messages goes here";
+            }
+        }
+    }]);
+
+    chat.directive('usersList', [function(){
+        return {
+            link: function(scope, element, attr){
+                socket.on('userjoined', function(data){
+                    console.log("userjoined");
+                    scope.addUser(data);
+                    scope.$apply();
+                });
+                socket.on('userdisconnected', function(userdata) {
+
+                });
+            },
+            restrict: 'E',
+            templateUrl: '/partials/chat/userList.html',
+            controller: function($scope){
+                $scope.userlist = [];
+
+                $scope.addUser = function(user){
+                    $scope.userlist.push(user.username);
+                };
             }
         }
     }]);
