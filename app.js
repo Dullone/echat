@@ -20,13 +20,16 @@ app.get('/', function(request, response) {
     response.sendFile(__dirname + '/index.html');
 });
 
+var connectedUsers = [];
 
 io.on('connection', function(client){
     console.log("Client connected...");
     //create random username and store
     var username =  randomUserName();
     client.handshake.session.username = username;
+    connectedUsers.push(username);
     client.broadcast.emit('userjoined', username);
+    client.emit('selfjoined', connectedUsers);
 
     client.on('username', function(message){
         client.handshake.session.username = message.username;
@@ -43,6 +46,7 @@ io.on('connection', function(client){
     client.on('disconnect', function(){
         console.log("disconnect");
         console.log(client.handshake.session.username);
+        removeUser(client.handshake.session.username);
         client.broadcast.emit('userdisconnected', client.handshake.session.username);
     });
 });
@@ -50,6 +54,13 @@ io.on('connection', function(client){
 
 var randomUserName = function(){
     return "user" + Math.floor(Math.random() * 10000000);
+};
+
+var removeUser = function(user){
+    var index = connectedUsers.indexOf(user);
+    if (index > -1) {
+        connectedUsers.splice(index, 1);
+    }
 };
 
 server.listen(3000);

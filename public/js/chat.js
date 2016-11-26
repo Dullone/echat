@@ -1,20 +1,25 @@
 (function() {
     
     var chat = angular.module('chat', []);
-    var socket = io.connect('http://localhost:3000');
+    var socket = null;
 
     chat.directive('chatWindow', ['$filter', function($filter){
-        socket.on('message', function(message){
-            console.log("Recieved" + message.body);
-            date = new Date();
-            time = $filter('date')(date, 'mediumTime');
-            dateString = '[' + time  + "] ";
-           $('.messages-window').append('<p>'+ 
-                        dateString + 
-                        message.username  + ": " + 
-                        message.body + '</p>');
-        });
         return{
+            link: function(scope, element, attr) {
+                socket = io(); //defaults to URL that served the page, ex: 'http://localhost:3000'
+
+                socket.on('message', function(message){
+                    console.log("Recieved" + message.body);
+                    date = new Date();
+                    time = $filter('date')(date, 'mediumTime');
+                    dateString = '[' + time  + "] ";
+                    $('.messages-window').append('<p>'+ 
+                                    dateString + 
+                                    message.username  + ": " + 
+                                    message.body + '</p>');
+                });
+
+            },
             restrict: 'E',
             templateUrl: '/partials/chat/chatwindow.html',
             controller: function($scope){
@@ -31,8 +36,16 @@
                     scope.addUser(data);
                     scope.$apply();
                 });
+                socket.on('selfjoined', function(usersdata){
+                    console.log(usersdata);
+                    usersdata.forEach(function(element){
+                        scope.userlist.push(element);
+                    });
+                    scope.$apply();
+                    
+                });
                 socket.on('userdisconnected', function(userdata) {
-
+                    scope.removeUser(userdata);
                 });
             },
             restrict: 'E',
@@ -42,6 +55,13 @@
 
                 $scope.addUser = function(username){
                     $scope.userlist.push(username);
+                };
+                $scope.removeUser = function(username){
+                    var index = $scope.userlist.indexOf(username);
+                    if (index > -1) {
+                        $scope.userlist.splice(index, 1);
+                    }
+                    $scope.$apply();
                 };
             }
         }
