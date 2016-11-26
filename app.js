@@ -2,8 +2,19 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
+var session = require('express-session')({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true
+});
+var sharedsession = require("express-socket.io-session");
 
 app.use(express.static('public'));
+app.use(session);
+io.use(sharedsession(session, {
+    autoSave:true
+}));
+
 
 app.get('/', function(request, response) {
     response.sendFile(__dirname + '/index.html');
@@ -12,19 +23,17 @@ app.get('/', function(request, response) {
 
 io.on('connection', function(client){
     console.log("Client connected...");
-    username =  randomUserName();
-    var userdata = {
-        username: username
-    }
-    console.log(userdata);
-    client.broadcast.emit('userjoined', userdata);
+    //create random username and store
+    var username =  randomUserName();
+    client.handshake.session.username = username;
+    client.broadcast.emit('userjoined', username);
 
     client.on('username', function(message){
-        username = message.username;
+        client.handshake.session.username = message.username;
     });
 
     client.on('message', function(message){
-        message.username = username;
+        message.username = client.handshake.session.username;
 
         client.broadcast.emit('message', message);
         client.emit('message', message);
@@ -33,8 +42,8 @@ io.on('connection', function(client){
 
     client.on('disconnect', function(){
         console.log("disconnect");
-        console.log(userdata);
-        client.broadcast.emit('userdisconnected', userdata);
+        console.log(client.handshake.session.username);
+        client.broadcast.emit('userdisconnected', client.handshake.session.username);
     });
 });
 

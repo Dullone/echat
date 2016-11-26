@@ -26,7 +26,8 @@
         return {
             link: function(scope, element, attr){
                 socket.on('userjoined', function(data){
-                    console.log("userjoined");
+                    console.log("userjoined" + data);
+                    console.log(scope.userlist);
                     scope.addUser(data);
                     scope.$apply();
                 });
@@ -39,8 +40,8 @@
             controller: function($scope){
                 $scope.userlist = [];
 
-                $scope.addUser = function(user){
-                    $scope.userlist.push(user.username);
+                $scope.addUser = function(username){
+                    $scope.userlist.push(username);
                 };
             }
         }
@@ -62,5 +63,19 @@
             }
         }
     }]);
+
+    //captures and responds to enter key
+    chat.directive('ngEnter', function() {
+    return function(scope, element, attrs) {
+        element.bind("keydown", function(e) {
+            if(e.which === 13) {
+                scope.$apply(function(){
+                    scope.$eval(attrs.ngEnter, {'e': e});
+                });
+                e.preventDefault();
+            }
+        });
+    };
+});
 
 })(); 
