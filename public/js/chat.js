@@ -9,20 +9,29 @@
                 socket = io(); //defaults to URL that served the page, ex: 'http://localhost:3000'
 
                 socket.on('message', function(message){
-                    console.log("Recieved" + message.body);
-                    date = new Date();
-                    time = $filter('date')(date, 'mediumTime');
-                    dateString = '[' + time  + "] ";
-                    $('.messages-window').append('<p>'+ 
-                                    dateString + 
-                                    message.username  + ": " + 
-                                    message.body + '</p>');
+                    scope.addMessageToChatwindow(message);
                 });
 
             },
             restrict: 'E',
             templateUrl: '/partials/chat/chatwindow.html',
             controller: function($scope){
+                $scope.addMessageToChatwindow = function(message){
+                    formatedMessage = $scope.formatChatMessage(message);
+                    $('.messages-window').append(formatedMessage);
+                };
+                $scope.formatChatMessage = function(message, date){
+                    if(!date){
+                        date = new Date();
+                    }
+                    time = $filter('date')(date, 'mediumTime');
+                    dateString = '[' + time  + "] ";
+                    return  '<p>'+ 
+                                dateString + 
+                                message.username  + ": " + 
+                                message.body + 
+                            '</p>'
+                };
             }
         }
     }]);
@@ -31,13 +40,10 @@
         return {
             link: function(scope, element, attr){
                 socket.on('userjoined', function(data){
-                    console.log("userjoined" + data);
-                    console.log(scope.userlist);
                     scope.addUser(data);
                     scope.$apply();
                 });
                 socket.on('selfjoined', function(usersdata){
-                    console.log(usersdata);
                     usersdata.forEach(function(element){
                         scope.userlist.push(element);
                     });
@@ -76,8 +82,7 @@
                 $scope.sendMessage =  function(message) {
                     if(message.body && message.body.length >= 1){
                         socket.emit('message', message);
-                        console.log("Sent: " + message.body);
-                        $scope.message = {};
+                        $scope.message = {}; //clear input feilds
                     }
                 };
             }
@@ -96,6 +101,6 @@
             }
         });
     };
-});
+    });
 
 })(); 
