@@ -53,7 +53,11 @@ io.on('connection', function(client){
 
 
 var randomUserName = function(){
-    return "user" + Math.floor(Math.random() * 10000000);
+    var username = "user" + Math.floor(Math.random() * 10000);
+    while(connectedUsers.indexOf(username) !== -1){
+        username += Math.floor(Math.random() * 10);
+    }
+    return username;
 };
 
 var removeUser = function(user){
