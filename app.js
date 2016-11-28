@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
+var randName = require("./randomName.js");
 var session = require('express-session')({
     secret: 'keyboard cat',
     resave: true,
@@ -25,7 +26,7 @@ var connectedUsers = [];
 io.on('connection', function(client){
     console.log("Client connected...");
     //create random username and store
-    var username =  randomUserName();
+    var username =  randName.randomUserName(connectedUsers);
     client.handshake.session.username = username;
     connectedUsers.push(username);
     client.broadcast.emit('userjoined', username);
@@ -50,15 +51,6 @@ io.on('connection', function(client){
         client.broadcast.emit('userdisconnected', client.handshake.session.username);
     });
 });
-
-
-var randomUserName = function(){
-    var username = "user" + Math.floor(Math.random() * 10000);
-    while(connectedUsers.indexOf(username) !== -1){
-        username += Math.floor(Math.random() * 10);
-    }
-    return username;
-};
 
 var removeUser = function(user){
     var index = connectedUsers.indexOf(user);
