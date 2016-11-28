@@ -2,6 +2,8 @@ Browser based chat program.
 
 Uses Angularjs for the front-end, Nodejs and express for the backend.  Client-server communication is handled by socket.io.  See package.json for other used modules.
 
+Test specs written in Jasmine.
+
 To run:  
 $ npm install  
 $ node app.js  
