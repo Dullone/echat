@@ -2,7 +2,7 @@ textarea.message-entry {
     resize: none;
 }
 
-.messages-window, .users-window {
-    max-height: 600px;
-    height: 600px;
+.messages-window, .users-window  {
+    max-height: 550px;
+    height: 550px;
 } 

@@ -18,7 +18,8 @@
             controller: function($scope){
                 $scope.addMessageToChatwindow = function(message){
                     formatedMessage = $scope.formatChatMessage(message);
-                    $('.messages-window').append(formatedMessage);
+                    $('.messages-window').append(formatedMessage)  //append message
+                        .scrollTop($('.messages-window')[0].scrollHeight); //and scoll to bottom
                 };
                 $scope.formatChatMessage = function(message, date){
                     if(!date){
