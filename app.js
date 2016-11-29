@@ -9,6 +9,7 @@ var session = require('express-session')({
     saveUninitialized: true
 });
 var sharedsession = require("express-socket.io-session");
+var users = require('./users/users.js');
 
 app.use(express.static('public'));
 app.use(session);
@@ -25,14 +26,12 @@ var connectedUsers = [];
 
 io.on('connection', function(client){
     console.log("Client connected...");
-    //create random username and store
-    var username =  randName.randomUserName(connectedUsers);
+    username = users.createUser();
     client.handshake.session.username = username;
-    connectedUsers.push(username);
     client.broadcast.emit('userjoined', username);
     setTimeout(function(){
-        client.emit('selfjoined', connectedUsers, username);
-    }, 300);
+        client.emit('selfjoined', users.all(), username);
+    }, 300); //give client time to get ready
     
 
     client.on('username', function(message){
@@ -50,16 +49,9 @@ io.on('connection', function(client){
     client.on('disconnect', function(){
         console.log("disconnect");
         console.log(client.handshake.session.username);
-        removeUser(client.handshake.session.username);
+        users.removeUser(client.handshake.session.username);
         client.broadcast.emit('userdisconnected', client.handshake.session.username);
     });
 });
-
-var removeUser = function(user){
-    var index = connectedUsers.indexOf(user);
-    if (index > -1) {
-        connectedUsers.splice(index, 1);
-    }
-};
 
 server.listen(3000);

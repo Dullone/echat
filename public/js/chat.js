@@ -72,7 +72,6 @@
 					$scope.$apply();
 				};
 				$scope.isUsernameSelf = function(username){
-					console.log(username + " = " + $scope.usernameSelf);
 					return username == $scope.usernameSelf;
 				};
 			}
