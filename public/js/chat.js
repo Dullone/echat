@@ -44,10 +44,11 @@
 					scope.addUser(data);
 					scope.$apply();
 				});
-				socket.on('selfjoined', function (usersdata) {
+				socket.on('selfjoined', function (usersdata, selfName) {
 					usersdata.forEach(function (element) {
 						scope.userlist.push(element);
 					});
+					scope.usernameSelf = selfName;
 					scope.$apply();
 
 				});
@@ -69,6 +70,10 @@
 						$scope.userlist.splice(index, 1);
 					}
 					$scope.$apply();
+				};
+				$scope.isUsernameSelf = function(username){
+					console.log(username + " = " + $scope.usernameSelf);
+					return username == $scope.usernameSelf;
 				};
 			}
 		}

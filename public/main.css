@@ -5,4 +5,11 @@ textarea.message-entry {
 .messages-window, .users-window  {
     max-height: 550px;
     height: 550px;
+
+}
+.username-self {
+    color: #05c3ff;
 } 
+.username-self::after {
+    content: "(self)";
+}

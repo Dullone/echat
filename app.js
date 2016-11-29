@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
-var randName = require("./randomName.js");
+var randName = require("./utility/randomName.js");
 var session = require('express-session')({
     secret: 'keyboard cat',
     resave: true,
@@ -30,7 +30,10 @@ io.on('connection', function(client){
     client.handshake.session.username = username;
     connectedUsers.push(username);
     client.broadcast.emit('userjoined', username);
-    client.emit('selfjoined', connectedUsers);
+    setTimeout(function(){
+        client.emit('selfjoined', connectedUsers, username);
+    }, 300);
+    
 
     client.on('username', function(message){
         client.handshake.session.username = message.username;

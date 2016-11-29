@@ -1,4 +1,4 @@
-var randomName = require("../randomName.js");
+var randomName = require("../utility/randomName.js");
 
 describe("RandomUserName", function(){
     it("returns a random username string", function(){

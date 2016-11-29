@@ -1,4 +1,8 @@
 <h3>Users</h3>
-<ul class="nav users" ng-repeat="user in userlist" >
-    <li>{{user}}</li>
+<ul class="nav users">
+    <li  ng-repeat="user in userlist" 
+         ng-class="isUsernameSelf(user) ? 'username-self' : 'username'"
+         >
+         {{user}}
+    </li>
 </ul>
