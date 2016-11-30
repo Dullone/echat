@@ -19,9 +19,9 @@ describe("removeUser", function(){
         users.clear();
     });
 
-    username = users.createUser();
-    users.removeUser(username);
     it("array to be empty after removing users", function(){
+        username = users.createUser();
+        users.removeUser(username);
         expect(users.all().length).toEqual(0);
     });
 

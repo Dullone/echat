@@ -29,10 +29,7 @@ io.on('connection', function(client){
     username = users.createUser();
     client.handshake.session.username = username;
     client.broadcast.emit('userjoined', username);
-    setTimeout(function(){
-        client.emit('selfjoined', users.all(), username);
-    }, 300); //give client time to get ready
-    
+    client.emit('selfjoined', users.all(), username);    
 
     client.on('username', function(message){
         client.handshake.session.username = message.username;
@@ -47,8 +44,7 @@ io.on('connection', function(client){
     });
 
     client.on('disconnect', function(){
-        console.log("disconnect");
-        console.log(client.handshake.session.username);
+        console.log("User " + client.handshake.session.username + " disconnect");
         users.removeUser(client.handshake.session.username);
         client.broadcast.emit('userdisconnected', client.handshake.session.username);
     });
