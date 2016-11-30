@@ -31,10 +31,10 @@
 						dateString +
 						message.username + ": " +
 						message.body +
-						'</p>'
+						'</p>';
 				};
 			}
-		}
+		};
 	}]);
 
 	chat.directive('usersList', [function () {
@@ -75,7 +75,7 @@
 					return username == $scope.usernameSelf;
 				};
 			}
-		}
+		};
 	}]);
 
 	chat.directive('messageEntry', [function () {
@@ -91,7 +91,7 @@
 					}
 				};
 			}
-		}
+		};
 	}]);
 
 	//captures and responds to enter key
