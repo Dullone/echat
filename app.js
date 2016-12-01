@@ -22,14 +22,14 @@ app.get('/', function(request, response) {
     response.sendFile(__dirname + '/index.html');
 });
 
-var connectedUsers = [];
-
 io.on('connection', function(client){
     console.log("Client connected...");
     username = users.createUser();
     client.handshake.session.username = username;
     client.broadcast.emit('userjoined', username);
-    client.emit('selfjoined', users.all(), username);    
+    setTimeout(function(){
+        client.emit('selfjoined', users.all(), username)
+    }, 300); //give time for client to get ready    
 
     client.on('username', function(message){
         client.handshake.session.username = message.username;

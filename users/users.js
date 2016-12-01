@@ -5,7 +5,7 @@ var randName = require("../utility/randomName.js");
 var connectedUsers = [];
 
 exports.createUser = function(){
-    var username =  randName.randomUserName(connectedUsers);
+    var username =  randName.randomUserName(exports.all());
     connectedUsers.push(username);
     return username;
 };
