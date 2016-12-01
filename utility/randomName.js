@@ -5,8 +5,7 @@ var namesGiven = 1;
 exports.randomUserName = function(connectedUsers){
     namesGiven++;
     var username = "user" + namesGiven;
-    console.log("given " + namesGiven);
-    console.log(username);
+    
     while(arrayContainsUser(connectedUsers, username) && username.length < 20){
         username += Math.floor(Math.random() * 10);
     }

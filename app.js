@@ -2,13 +2,14 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
-var randName = require("./utility/randomName.js");
 var session = require('express-session')({
     secret: 'keyboard cat',
     resave: true,
     saveUninitialized: true
 });
 var sharedsession = require("express-socket.io-session");
+
+//non-vendor packages
 var users = require('./users/users.js');
 
 app.use(express.static('public'));
