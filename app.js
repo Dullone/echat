@@ -20,7 +20,15 @@ io.use(sharedsession(session, {
 
 
 app.get('/', function(request, response) {
-    response.sendFile(__dirname + '/index.html');
+    homepage = __dirname + '/public/html/index.html'
+    response.sendFile(homepage, function(err){
+        if(err){
+            response.sendStatus(err.status);
+            console.log(err);
+            response.status(err.status).end();
+        }
+    });
+
 });
 
 io.on('connection', function(client){
